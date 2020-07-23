@@ -21,12 +21,12 @@ public class demoService {
         Path walletPath = Paths.get("/home/ubuntu/workspace/app/example02_java/wallet", orgName);
         Wallet wallet = Wallets.newFileSystemWallet(walletPath);
 
-        Identity identity = wallet.get(userName);
-
-        if (identity == null) {
-            System.out.println("The identity \"" + userName + "@"+ orgName + "\" doesn't exists in the wallet");
-            return null;
-        }
+//        Identity identity = wallet.get(userName);
+//
+//        if (identity == null) {
+//            System.out.println("The identity \"" + userName + "@"+ orgName + "\" doesn't exists in the wallet");
+//            return null;
+//        }
 
         Path networkConfigPath = Paths.get( "/home/ubuntu/workspace/app/example02_java/profiles", orgName, "connection.json");
         Gateway.Builder builder = Gateway.createBuilder();
