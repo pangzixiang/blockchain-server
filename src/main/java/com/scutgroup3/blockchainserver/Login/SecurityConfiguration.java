@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**","/fonts/**","/images/**","/js/**","/login/**").permitAll()
-                .antMatchers("/query").hasRole("Org1MSP")
+                .antMatchers("/InitRule").hasRole("sellerMSP")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin(form -> form

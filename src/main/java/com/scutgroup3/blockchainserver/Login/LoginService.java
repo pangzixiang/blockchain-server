@@ -12,8 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +25,8 @@ import java.util.List;
 public class LoginService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        String rootPath = "C:/Users/PZX/Desktop/";
-        String walletPath = rootPath+s+".id";
+        String rootPath = "/home/ubuntu/group3BlockChain/wallet/";
+        String walletPath = rootPath+getRole(s)+"/"+s+".id";
         person person = null;
         try {
             BufferedReader in = new BufferedReader(new FileReader(walletPath));
@@ -52,8 +54,23 @@ public class LoginService implements UserDetailsService {
 
     private Collection<GrantedAuthority> getAuthorities(person user, String rootPath) throws IOException {
         List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
-        Wallet wallet = Wallets.newFileSystemWallet(Paths.get(rootPath));
-        authList.add(new SimpleGrantedAuthority("ROLE_"+wallet.get("user01").getMspId())); //将所有权限设为用户
+        Wallet wallet = Wallets.newFileSystemWallet(Paths.get(rootPath,getRole(user.getUsername())));
+        authList.add(new SimpleGrantedAuthority("ROLE_"+wallet.get(user.getUsername()).getMspId())); //将所有权限设为用户
         return authList;
+    }
+
+    private String getRole(String userName){
+        String rootPath = "/home/ubuntu/group3BlockChain/wallet/";
+        File buyer = new File(rootPath+"buyer/" + userName + ".id");
+        File seller = new File(rootPath+"seller/" + userName + ".id");
+        File platform = new File(rootPath+"platform/" + userName + ".id");
+        if (buyer.exists())
+            return "buyer";
+        else if (seller.exists())
+            return "seller";
+        else if (platform.exists())
+            return "platform";
+        else
+            return null;
     }
 }
