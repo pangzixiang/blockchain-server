@@ -40,7 +40,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**","/fonts/**","/images/**","/js/**","/login/**").permitAll()
-                .antMatchers("/InitRule").hasRole("sellerMSP")
+                .antMatchers("/InitRule","/getDiscountRuleID","/QueryParticipation","/QueryState","/Open").hasRole("sellerMSP")
+                .antMatchers("/InitGroup","/getInitGroupBuyingID","/Participate").hasRole("buyerMSP")
+                .antMatchers("/InitCredit","/ChangeCredit","/InitTrans","/getTransID","/ChangeTrans","/QueryTrans").hasRole("platformMSP")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin(form -> form

@@ -2,13 +2,11 @@ package com.scutgroup3.blockchainserver.BlockChainAPI;
 
 import com.scutgroup3.blockchainserver.Redis.redisComponent;
 import org.hyperledger.fabric.gateway.ContractException;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +27,7 @@ public class BlockChainController {
      * 获取当前用户信息
      * @return
      */
-    @RequestMapping("/getUserInfo")
+    @RequestMapping(name = "/getUserInfo", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> getUserInfo(){
         Map<String, Object> map = new HashMap<>();
@@ -50,7 +48,7 @@ public class BlockChainController {
     /**
      * buyer
      */
-    @RequestMapping("/InitGroup")
+    @RequestMapping(name = "/InitGroup", method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> InitGroup(@RequestParam("discountRuleID") String discountRuleID) throws InterruptedException, ContractException, TimeoutException, IOException {
         Map<String,Object> map = new HashMap<>();
@@ -66,7 +64,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping("/getInitGroupBuyingID")
+    @RequestMapping(name = "/getInitGroupBuyingID", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> getGroupBuyingID(){
         Map<String, Object> map = new HashMap<>();
@@ -75,7 +73,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping("/Participate")
+    @RequestMapping(name = "/Participate",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> participate(@RequestParam("groupBuyingID") String groupBuyingID) throws InterruptedException, ContractException, TimeoutException, IOException {
         Map<String, Object> map = new HashMap<>();
@@ -89,7 +87,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping("/QueryGroupBuying")
+    @RequestMapping(name = "/QueryGroupBuying",method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> QueryGroupBuying(@RequestParam("groupBuyingID") String groupBuyingID) throws InterruptedException, ContractException, TimeoutException, IOException {
         Map<String, Object> map = new HashMap<>();
@@ -105,7 +103,7 @@ public class BlockChainController {
     /**
      *  seller
      */
-    @RequestMapping("/InitRule")
+    @RequestMapping(name = "/InitRule", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> InitRule(@RequestParam("goodID") String goodID,
                                           @RequestParam("groupNum") String groupNum,
@@ -127,7 +125,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping("/getDiscountRuleID")
+    @RequestMapping(name = "/getDiscountRuleID", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> getDiscountRuleID(){
         Map<String, Object> map = new HashMap<>();
@@ -136,7 +134,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping("/QueryParticipation")
+    @RequestMapping(name = "/QueryParticipation", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> QueryParticipation(@RequestParam("discountRuleID") String discountRuleID) throws InterruptedException, ContractException, TimeoutException, IOException {
         Map<String, Object> map = new HashMap<>();
@@ -148,7 +146,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping("/QueryState")
+    @RequestMapping(name = "/QueryState", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> QueryState(@RequestParam("discountRuleID") String discountRuleID) throws InterruptedException, ContractException, TimeoutException, IOException {
         Map<String, Object> map = new HashMap<>();
@@ -160,7 +158,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping("/Open")
+    @RequestMapping(name = "/Open",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> Open(@RequestParam("discountRuleID") String discountRuleID, @RequestParam("duration") String duration) throws InterruptedException, ContractException, TimeoutException, IOException, SchedulerException {
         Map<String, Object> map = new HashMap<>();
@@ -177,6 +175,89 @@ public class BlockChainController {
     /**
      * platform
      */
+    @RequestMapping(name = "/InitCredit",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> InitCredit(@RequestParam("userID") String userId) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String, Object> map = new HashMap<>();
+        String functionName = "InitCredit";
+        String type = "submit";
+        String result = blockChainService.sdk(type,functionName,userId);
+        map.put("userID",userId);
+        map.put("result",result);
+        return map;
+    }
 
+    @RequestMapping(name = "/ChangeCredit",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String ,Object> ChangeCredit(@RequestParam("userID") String userID, @RequestParam("changeValue") String changeValue) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String, Object> map = new HashMap<>();
+        String functionName = "ChangeCredit";
+        String type = "submit";
+        String result = blockChainService.sdk(type,functionName,userID,changeValue);
+        map.put("userID",userID);
+        map.put("changeValue",changeValue);
+        map.put("result",result);
+        return map;
+    }
+
+    @RequestMapping(name = "/QueryCredit",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> QueryCredit(@RequestParam("userID") String userID) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String, Object> map = new HashMap<>();
+        String functionName = "QueryCredit";
+        String type = "evaluate";
+        String result = blockChainService.sdk(type,functionName,userID);
+        map.put("result",result);
+        map.put("userID",userID);
+        return map;
+    }
+
+    @RequestMapping(name = "/InitTrans",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> InitTrans(@RequestParam("discountRuleID") String discountRuleID, @RequestParam("groupBuyingID") String groupBuyingID) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String, Object> map = new HashMap<>();
+        String functionName = "InitTrans";
+        String type = "submit";
+        String result = blockChainService.sdk(type, functionName,discountRuleID,groupBuyingID);
+        redisComponent.setList("transID",groupBuyingID+"-"+discountRuleID);
+        map.put("discountRuleID",discountRuleID);
+        map.put("groupBuyingID",groupBuyingID);
+        map.put("result",result);
+
+        return map;
+    }
+
+    @RequestMapping(name = "/getTransID",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getTransID(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("transID",redisComponent.getList("transID"));
+        return map;
+    }
+
+    @RequestMapping(name = "/ChangeTrans",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> ChangeTrans(@RequestParam("transID") String transID, @RequestParam("transState") String transState) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String,Object> map = new HashMap<>();
+        String functionName = "ChangeTrans";
+        String type = "submit";
+        String result = blockChainService.sdk(type,functionName,transID,transState);
+        map.put("result",result);
+        map.put("transID",transID);
+        map.put("transState",transState);
+        return map;
+    }
+
+    @RequestMapping(name = "/QueryTrans",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> QueryTrans(@RequestParam("transID") String transID) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String, Object> map = new HashMap<>();
+        String functionName = "QueryTrans";
+        String type = "evaluate";
+        String result = blockChainService.sdk(type,functionName,transID);
+        map.put("result",result);
+        return map;
+
+    }
 
 }
