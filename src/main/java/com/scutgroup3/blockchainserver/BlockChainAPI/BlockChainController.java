@@ -2,7 +2,6 @@ package com.scutgroup3.blockchainserver.BlockChainAPI;
 
 import com.scutgroup3.blockchainserver.Redis.redisComponent;
 import org.hyperledger.fabric.gateway.ContractException;
-import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +24,19 @@ public class BlockChainController {
 
     @Autowired
     private redisComponent redisComponent;
+
+    /**
+     * 获取当前用户信息
+     * @return
+     */
+    @RequestMapping("/getUserInfo")
+    @ResponseBody
+    public Map<String, Object> getUserInfo(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("name",blockChainService.getUserName());
+        map.put("role", blockChainService.getRole());
+        return map;
+    }
 
     /**
      *首页
