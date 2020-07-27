@@ -6,6 +6,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 @Controller
+@CrossOrigin
 public class BlockChainController {
     @Autowired
     private BlockChainService blockChainService;
@@ -38,12 +40,52 @@ public class BlockChainController {
      */
     @RequestMapping("/InitGroup")
     @ResponseBody
-    public Map<String,Object> InitGroup(){
+    public Map<String,Object> InitGroup(@RequestParam("discountRuleID") String discountRuleID) throws InterruptedException, ContractException, TimeoutException, IOException {
         Map<String,Object> map = new HashMap<>();
+        String userID = blockChainService.getUserName();
+        String groupBuyingID = UUID.randomUUID().toString().replace("-","");
+        String functionName = "InitGroup";
+        String type = "submit";
+        String result = blockChainService.sdk(type,functionName,userID,groupBuyingID,discountRuleID);
+        redisComponent.setList(userID+"-Init",groupBuyingID);
+        map.put("groupBuyingID",groupBuyingID);
+        map.put("discountRuleID",discountRuleID);
+        map.put("result",result);
+        return map;
+    }
 
+    @RequestMapping("/getInitGroupBuyingID")
+    @ResponseBody
+    public Map<String, Object> getGroupBuyingID(){
+        Map<String, Object> map = new HashMap<>();
+        String userID = blockChainService.getUserName();
+        map.put("result",redisComponent.getList(userID+"-Init"));
+        return map;
+    }
 
+    @RequestMapping("/Participate")
+    @ResponseBody
+    public Map<String, Object> participate(@RequestParam("groupBuyingID") String groupBuyingID) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String, Object> map = new HashMap<>();
+        String functionName = "Participate";
+        String userID = blockChainService.getUserName();
+        String type = "submit";
+        String result = blockChainService.sdk(type,functionName,userID,groupBuyingID);
+        redisComponent.setList(userID+"-Par",groupBuyingID);
+        map.put("result", result);
+        map.put("groupBuyingID",groupBuyingID);
+        return map;
+    }
 
-
+    @RequestMapping("/QueryGroupBuying")
+    @ResponseBody
+    public Map<String, Object> QueryGroupBuying(@RequestParam("groupBuyingID") String groupBuyingID) throws InterruptedException, ContractException, TimeoutException, IOException {
+        Map<String, Object> map = new HashMap<>();
+        String functionName = "QueryGroupBuying";
+        String type = "evaluate";
+        String result = blockChainService.sdk(type,functionName,groupBuyingID);
+        map.put("groupBuyingID",groupBuyingID);
+        map.put("result",result);
         return map;
     }
 
