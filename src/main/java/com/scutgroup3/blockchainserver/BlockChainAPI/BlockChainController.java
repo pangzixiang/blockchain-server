@@ -73,6 +73,15 @@ public class BlockChainController {
         return map;
     }
 
+    @RequestMapping(value = "/getParticipate")
+    @ResponseBody
+    public Map<String, Object> getParticipate(){
+        Map<String, Object> map = new HashMap<>();
+        String userID = blockChainService.getUserName();
+        map.put("result",redisComponent.getList(userID+"-Par"));
+        return map;
+    }
+
     @RequestMapping(value = "/Participate",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> participate(@RequestParam("groupBuyingID") String groupBuyingID) throws InterruptedException, ContractException, TimeoutException, IOException {

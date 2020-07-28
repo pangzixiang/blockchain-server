@@ -57,7 +57,6 @@ public class BlockChainService {
         }else {
             currentUser = principl.toString();
         }
-        System.out.println("currentUser" + currentUser);
         return currentUser;
     }
 
@@ -70,7 +69,6 @@ public class BlockChainService {
         }else {
             role = principl.toString();
         }
-        System.out.println("currentUser" + role);
         return role;
     }
 

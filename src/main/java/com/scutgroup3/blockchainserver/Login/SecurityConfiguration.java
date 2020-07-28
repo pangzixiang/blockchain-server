@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/css/**","/fonts/**","/images/**","/js/**","/login/**").permitAll()
                 .antMatchers("/InitRule","/getDiscountRuleID","/QueryParticipation","/QueryState","/Open").hasRole("sellerMSP")
-                .antMatchers("/InitGroup","/getInitGroupBuyingID","/Participate").hasRole("buyerMSP")
+                .antMatchers("/InitGroup","/getInitGroupBuyingID","/Participate","/getParticipate").hasRole("buyerMSP")
                 .antMatchers("/InitCredit","/ChangeCredit","/InitTrans","/getTransID","/ChangeTrans","/QueryTrans").hasRole("platformMSP")
                 .anyRequest().authenticated()
                 .and()
