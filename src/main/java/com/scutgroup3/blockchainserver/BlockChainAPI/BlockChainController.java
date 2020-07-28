@@ -44,6 +44,11 @@ public class BlockChainController {
         return "tempIndex";
     }
 
+    @RequestMapping("/APIDoc")
+    public String APIDoc(){
+        return "APIDoc";
+    }
+
 
     /**
      * buyer
@@ -73,7 +78,7 @@ public class BlockChainController {
         return map;
     }
 
-    @RequestMapping(value = "/getParticipate")
+    @RequestMapping(value = "/getParticipate", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> getParticipate(){
         Map<String, Object> map = new HashMap<>();
@@ -231,6 +236,7 @@ public class BlockChainController {
         redisComponent.setList("transID",groupBuyingID+"-"+discountRuleID);
         map.put("discountRuleID",discountRuleID);
         map.put("groupBuyingID",groupBuyingID);
+        map.put("TransID",groupBuyingID+"-"+discountRuleID);
         map.put("result",result);
 
         return map;
