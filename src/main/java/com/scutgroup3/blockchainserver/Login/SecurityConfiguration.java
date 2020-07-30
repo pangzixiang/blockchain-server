@@ -11,9 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configurable
 @EnableWebSecurity
+@CrossOrigin
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
@@ -37,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**","/fonts/**","/images/**","/js/**","/login/**","/APIDoc").permitAll()
                 .antMatchers("/InitRule","/getDiscountRuleID","/QueryParticipation","/QueryState","/Open").hasRole("sellerMSP")
