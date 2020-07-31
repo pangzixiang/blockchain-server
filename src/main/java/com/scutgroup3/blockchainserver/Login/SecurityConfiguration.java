@@ -42,16 +42,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**","/fonts/**","/images/**","/js/**","/login/**","/APIDoc").permitAll()
-                .antMatchers("/InitRule","/getDiscountRuleID","/QueryParticipation","/QueryState","/Open").hasRole("sellerMSP")
-                .antMatchers("/InitGroup","/getInitGroupBuyingID","/Participate","/getParticipate").hasRole("buyerMSP")
-                .antMatchers("/InitCredit","/ChangeCredit","/InitTrans","/getTransID","/ChangeTrans","/QueryTrans").hasRole("platformMSP")
+                .antMatchers("/InitRule","/getDiscountRuleID","/QueryParticipation","/QueryState","/Open","/api3","/api4","/api5","/api6","/api7","/api12","/api15").hasRole("sellerMSP")
+                .antMatchers("/InitGroup","/getInitGroupBuyingID","/Participate","/getParticipate","/api8","/api9","/api10","/api12","/api15").hasRole("buyerMSP")
+                .antMatchers("/InitCredit","/ChangeCredit","/InitTrans","/getTransID","/ChangeTrans","/QueryTrans","/api12","/api13","/api14","/api15","/api16","/api17","/api18","/api19").hasRole("platformMSP")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin(form -> form
-                                .loginPage("/login")
+                                .loginPage("/login").successForwardUrl("/")
                                 .permitAll()
 //                    .successHandler(customAuthenticationSuccessHandler)
                 ).httpBasic().and().logout().logoutSuccessUrl("/");
+        http.headers().frameOptions().disable();
     }
 
 

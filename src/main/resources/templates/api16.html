@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>智能导购后台页面</title>
+
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/xadmin.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <div class="x-body layui-anim layui-anim-up">
+          <div class="layui-form-item">
+              <label for="discountRuleID" class="layui-form-label">
+                  <span class="x-red">*</span>优惠规则ID
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="discountRuleID" name="goods_num" required=""
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="groupBuyingID" class="layui-form-label">
+                  <span class="x-red">*</span>拼团ID
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="groupBuyingID" name="goods_name" required=""
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+
+
+          <div class="layui-form-item">
+              <label for="groupBuyingID" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="add" lay-submit="" onclick="submitAdd()">
+                  创建
+              </button>
+
+          </div>
+    </div>
+    <fieldset class="layui-elem-field">
+        <legend>结果</legend>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <th>优惠规则ID</th>
+                    <td id="discountRuleID2">####</td></tr>
+                <tr>
+                    <th>拼团ID</th>
+                    <td id="groupBuyingID2">####</td></tr>
+                <tr>
+                    <th>交易单ID</th>
+                    <td id="TransID">####</td></tr>
+                <tr>
+                    <th>结果</th>
+                    <td id="result">####</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+
+  </body>
+  <script>
+    function submitAdd() {
+        var discountRuleID = document.getElementById('discountRuleID').value;
+        var groupBuyingID = document.getElementById('groupBuyingID').value;
+        const data =new FormData()
+        data.append("discountRuleID",discountRuleID)
+        data.append("groupBuyingID",groupBuyingID)
+        axios.post('http://161.189.141.136:9200/InitTrans', data)
+        .then(function (res) {
+            console.log(res);
+            document.getElementById('result').innerText = res.data.result;
+            document.getElementById('discountRuleID2').innerText = res.data.discountRuleID;
+            document.getElementById('groupBuyingID2').innerText = res.data.groupBuyingID;
+            document.getElementById('TransID').innerText = res.data.TransID;
+        });
+    }
+  </script>
+</html>

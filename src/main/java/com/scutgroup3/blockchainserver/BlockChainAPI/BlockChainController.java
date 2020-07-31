@@ -6,6 +6,7 @@ import org.omg.CORBA.OBJ_ADAPTER;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -40,8 +41,15 @@ public class BlockChainController {
      *首页
      */
     @RequestMapping("/")
-    public String tempIndex(){
-        return "tempIndex";
+    public String index(Model model){
+        model.addAttribute("username",blockChainService.getUserName());
+        model.addAttribute("role",blockChainService.getRole());
+        return "index";
+    }
+
+    @RequestMapping("/{api}")
+    public String api(@PathVariable String api){
+        return api;
     }
 
     @RequestMapping("/APIDoc")
@@ -179,6 +187,7 @@ public class BlockChainController {
         String functionName = "Open";
         String type = "submit";
         blockChainService.Close(discountRuleID, duration).start();
+        Thread.sleep(1000*5);
         String result = blockChainService.sdk(type,functionName,discountRuleID,duration);
         map.put("discountRuleID",discountRuleID);
         map.put("duration", duration);

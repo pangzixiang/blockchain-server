@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>智能导购后台页面</title>
+
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/xadmin.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <div class="x-body layui-anim layui-anim-up">
+          <div class="layui-form-item">
+              <label for="discountRuleID" class="layui-form-label">
+                  <span class="x-red">*</span>优惠规则ID
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="discountRuleID" name="goods_num" required=""
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="duration" class="layui-form-label">
+                  <span class="x-red">*</span>优惠规则时长
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="duration" name="goods_name" required=""
+                  autocomplete="off" class="layui-input" placeholder="以分钟为单位">
+              </div>
+          </div>
+
+          <div class="layui-form-item">
+              <label for="duration" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="add" lay-submit="" onclick="submitAdd()">
+                  开启
+              </button>
+
+          </div>
+    </div>
+    <fieldset class="layui-elem-field">
+        <legend>结果</legend>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <th>调用结果</th>
+                    <td id="result">####</td></tr>
+                <tr>
+                    <th>discountRuleID</th>
+                    <td id="discountRuleID2">####</td></tr>
+                <tr>
+                    <th>duration</th>
+                    <td id="duration2">####</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+
+  </body>
+  <script>
+    function submitAdd() {
+        var discountRuleID = document.getElementById('discountRuleID').value;
+        var duration = document.getElementById('duration').value;
+        const data = new FormData()
+        data.append("discountRuleID",discountRuleID)
+        data.append("duration",duration)
+        axios.post('http://161.189.141.136:9200/Open', data)
+        .then(function (res) {
+            console.log(res);
+            document.getElementById('result').innerText = res.data.result;
+            document.getElementById('discountRuleID2').innerText = res.data.discountRuleID;
+            document.getElementById('duration2').innerText = res.data.duration;
+        });
+    }
+  </script>
+</html>
